@@ -3858,6 +3858,12 @@ class TestDataset:
         with raises_regex(TypeError, "unexpected keyword argument 'axis'"):
             ds.reduce(total_sum, dim='x')
 
+    def test_reduce_keepdims(self):
+        ds = Dataset({'a': (['x', 'y'], [[0, 1, 2, 3, 4]])})
+        actual = ds.mean(keepdims=True)
+        expected = Dataset({'a': (['x','y'], np.mean(ds.a, keepdims=True))})
+        assert_identical(expected, actual)
+
     def test_quantile(self):
 
         ds = create_test_data(seed=123)

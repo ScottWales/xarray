@@ -1637,7 +1637,7 @@ class DataArray(AbstractArray, DataWithCoords):
         """
         return ops.fillna(self, other, join="outer")
 
-    def reduce(self, func, dim=None, axis=None, keep_attrs=None, **kwargs):
+    def reduce(self, func, dim=None, axis=None, keep_attrs=None, keepdims=None, **kwargs):
         """Reduce this array by applying `func` along some dimension(s).
 
         Parameters
@@ -1657,6 +1657,9 @@ class DataArray(AbstractArray, DataWithCoords):
             If True, the variable's attributes (`attrs`) will be copied from
             the original object to the new one.  If False (default), the new
             object will be returned without attributes.
+        keepdims : bool, optional
+            If True, the dimensions which are reduced are left in the result
+            as dimensions of size one
         **kwargs : dict
             Additional keyword arguments passed on to `func`.
 
@@ -1667,7 +1670,7 @@ class DataArray(AbstractArray, DataWithCoords):
             summarized data and the indicated dimension(s) removed.
         """
 
-        var = self.variable.reduce(func, dim, axis, keep_attrs, **kwargs)
+        var = self.variable.reduce(func, dim, axis, keep_attrs, keepdims, **kwargs)
         return self._replace_maybe_drop_dims(var)
 
     def to_pandas(self):

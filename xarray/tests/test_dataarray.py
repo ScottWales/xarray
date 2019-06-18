@@ -1976,6 +1976,10 @@ class TestDataArray:
                              dims=['x', 'y']).mean('x')
         assert_equal(actual, expected)
 
+        actual = orig.mean(keepdims=True)
+        expected = DataArray(orig.data.mean(keepdims=True), dims=orig.dims)
+        assert_equal(actual, expected)
+
     def test_reduce_dtype(self):
         coords = {'x': [-1, -2], 'y': ['ab', 'cd', 'ef'],
                   'lat': (['x', 'y'], [[1, 2, 3], [-1, -2, -3]]),
