@@ -1985,7 +1985,8 @@ class TestDataArray:
         # Mean on all axes loses non-constant coordinates
         actual = orig.mean(keepdims=True)
         expected = DataArray(orig.data.mean(keepdims=True), dims=orig.dims,
-                coords={k:v for k,v in coords.items() if k in ['c']})
+                             coords={k: v for k, v in coords.items()
+                                     if k in ['c']})
         assert_equal(actual, expected)
 
         assert actual.sizes['x'] == 1
@@ -1993,8 +1994,10 @@ class TestDataArray:
 
         # Mean on specific axes loses coordinates not involving that axis
         actual = orig.mean('y', keepdims=True)
-        expected = DataArray(orig.data.mean(axis=1, keepdims=True), dims=orig.dims,
-                coords={k:v for k,v in coords.items() if k not in ['y','lat']})
+        expected = DataArray(orig.data.mean(axis=1, keepdims=True),
+                             dims=orig.dims,
+                             coords={k: v for k, v in coords.items()
+                                     if k not in ['y', 'lat']})
         assert_equal(actual, expected)
 
     @requires_bottleneck

@@ -1392,7 +1392,7 @@ class Variable(common.AbstractArray, arithmetic.SupportsArithmetic,
         attrs = self._attrs if keep_attrs else None
 
         if keepdims:
-            for i,d in enumerate(self.dims):
+            for i, d in enumerate(self.dims):
                 if d not in dims:
                     dims.insert(i, d)
                     data = np.expand_dims(data, axis=i)
