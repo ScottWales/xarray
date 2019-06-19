@@ -1997,6 +1997,19 @@ class TestDataArray:
                 coords={k:v for k,v in coords.items() if k not in ['y','lat']})
         assert_equal(actual, expected)
 
+    @requires_bottleneck
+    def test_reduce_keepdims_bottleneck(self):
+        import bottleneck
+
+        coords = {'x': [-1, -2], 'y': ['ab', 'cd', 'ef'],
+                  'lat': (['x', 'y'], [[1, 2, 3], [-1, -2, -3]]),
+                  'c': -999}
+        orig = DataArray([[-1, 0, 1], [-3, 0, 3]], coords, dims=['x', 'y'])
+
+        # Mean on all axes loses non-constant coordinates
+        actual = orig.reduce(bottleneck.nanmean, keepdims=True)
+        expected = orig.mean(keepdims=True)
+        assert_equal(actual, expected)
 
     def test_reduce_dtype(self):
         coords = {'x': [-1, -2], 'y': ['ab', 'cd', 'ef'],
