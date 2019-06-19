@@ -3859,9 +3859,18 @@ class TestDataset:
             ds.reduce(total_sum, dim='x')
 
     def test_reduce_keepdims(self):
-        ds = Dataset({'a': (['x', 'y'], [[0, 1, 2, 3, 4]])})
+        ds = Dataset({'a': (['x', 'y'], [[0, 1, 2, 3, 4]])},
+                coords={'y': [0,1,2,3,4], 'x': [0], 'lat': (['x','y'],[[0,1,2,3,4]])})
+
+        # Mean on all axes loses all coordinates
         actual = ds.mean(keepdims=True)
         expected = Dataset({'a': (['x','y'], np.mean(ds.a, keepdims=True))})
+        assert_identical(expected, actual)
+
+        # Mean on specific axis keeps other coordinates
+        actual = ds.mean('x', keepdims=True)
+        expected = Dataset({'a': (['x','y'], np.mean(ds.a, axis=0, keepdims=True))},
+                        coords={'y': ds.y})
         assert_identical(expected, actual)
 
     def test_quantile(self):

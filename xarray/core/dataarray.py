@@ -258,8 +258,13 @@ class DataArray(AbstractArray, DataWithCoords):
         return type(self)(variable, coords, name=name, fastpath=True)
 
     def _replace_maybe_drop_dims(self, variable, name=__default):
-        if variable.dims == self.dims:
+        if variable.dims == self.dims and variable.shape == self.shape:
             coords = self._coords.copy()
+        elif variable.dims == self.dims:
+            # Shape has changed (e.g. from reduce(..., keepdims=True)
+            new_sizes = dict(zip(self.dims, variable.shape))
+            coords = OrderedDict((k, v) for k, v in self._coords.items()
+                    if v.shape == tuple(new_sizes[d] for d in v.dims))
         else:
             allowed_dims = set(variable.dims)
             coords = OrderedDict((k, v) for k, v in self._coords.items()
